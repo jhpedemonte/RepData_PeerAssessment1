@@ -10,6 +10,9 @@ output:
 
 
 ```r
+library(dplyr)
+library(ggplot2)
+
 unzip('activity.zip', overwrite = TRUE)
 # 'interval' values represent hours/minutes during the day (format of HHMM), meaning
 # we can't treat as continuous values (after ..55, values roll to ..00, leaving a gap
@@ -22,22 +25,17 @@ data$interval <- as.factor(sprintf('%04d', data$interval))
 
 
 ```r
-library(dplyr)
 total_steps_per_day <- data %>%
     group_by(date) %>%
     summarise(total_steps = sum(steps))
-```
-
-
-```r
-library(ggplot2)
 ggplot(total_steps_per_day, aes(x = total_steps)) +
     geom_histogram(binwidth=1000, color = "blue", fill = "white") +
-    labs(title = "Distribution of Daily Steps", x = "Steps", y = "Count")
+    labs(title = "Distribution of Total Daily Steps", x = "Steps", y = "Count")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
 
+The **mean** and **median** of the total number of steps taken per day are:
 
 ```r
 mean(total_steps_per_day$total_steps, na.rm = TRUE)
@@ -72,12 +70,18 @@ ggplot(ave_steps_by_interval, aes(as.numeric(interval), ave_steps)) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
+The **interval** with the most average number of steps across all days:
 
 ```r
 max_idx <- which.max(ave_steps_by_interval$ave_steps)
 max_interval <- ave_steps_by_interval$interval[max_idx]
+as.character(max_interval)
+```
+
+```
+## [1] "0835"
 ```
 
 ## Imputing missing values
@@ -110,8 +114,9 @@ ggplot(total_steps_per_day_no_na, aes(x = total_steps)) +
     labs(title = "Distribution of Daily Steps (missing values replaced)", x = "Steps", y = "Count")
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
+The **mean** and **median** of the total number of steps taken per day (after replacing missing values) are:
 
 ```r
 mean(total_steps_per_day_no_na$total_steps, na.rm = TRUE)
@@ -129,6 +134,8 @@ median(total_steps_per_day_no_na$total_steps, na.rm = TRUE)
 ## [1] 10766.19
 ```
 
+After replacing missing values by the average of non-missing values for each interval, the number of days with a total step count at the median increased greatly.
+
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
@@ -145,4 +152,6 @@ ggplot(ave_steps_by_interval_no_na, aes(as.numeric(interval), ave_steps)) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
+
+Comparing the average step activity between **weekdays** and **weekends**, there is a noticeable greater concentration of steps on early weekday mornings which isn't as strong on weekends.
