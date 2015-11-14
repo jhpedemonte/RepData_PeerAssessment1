@@ -10,7 +10,11 @@ output:
 
 ```{r}
 unzip('activity.zip', overwrite = TRUE)
-data <- read.csv('activity.csv')
+# 'interval' values represent hours/minutes during the day (format of HHMM), meaning
+# we can't treat as continuous values (after ..55, values roll to ..00, leaving a gap
+# in a continuous scale). Therefore, treat as factor instead.
+data <- read.csv('activity.csv', colClasses = c('integer', 'Date', 'integer'))
+data$interval <- as.factor(sprintf('%04d', data$interval))
 ```
 
 ## What is mean total number of steps taken per day?
@@ -40,8 +44,13 @@ median(total_steps_per_day$total_steps, na.rm = TRUE)
 ave_steps_by_interval <- data %>%
     group_by(interval) %>%
     summarise(ave_steps = mean(steps, na.rm = TRUE))
-ggplot(ave_steps_by_interval, aes(x = interval, y = ave_steps)) +
+
+plot_x_labels = c('0000', '0600', '1200', '1800', '2400')
+plot_x_breaks = seq(1, 288, along.with = plot_x_labels)
+
+ggplot(ave_steps_by_interval, aes(as.numeric(interval), ave_steps)) +
     geom_line(color = "blue") +
+    scale_x_continuous(breaks = plot_x_breaks, labels = plot_x_labels) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
 
@@ -86,8 +95,9 @@ data_replace_na <- data_replace_na %>%
 ave_steps_by_interval_no_na <- data_replace_na %>%
     group_by(interval, day) %>%
     summarise(ave_steps = mean(steps, na.rm = TRUE))
-ggplot(ave_steps_by_interval_no_na, aes(interval, ave_steps)) +
+ggplot(ave_steps_by_interval_no_na, aes(as.numeric(interval), ave_steps)) +
     geom_line(color = "blue") +
+    scale_x_continuous(breaks = plot_x_breaks, labels = plot_x_labels) +
     facet_grid(day ~ .) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
