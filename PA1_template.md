@@ -1,4 +1,9 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 
 ## Loading and preprocessing the data
@@ -27,7 +32,7 @@ ggplot(total_steps_per_day, aes(x = total_steps)) +
     labs(title = "Distribution of Daily Steps", x = "Steps", y = "Count")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
 
 ```r
@@ -58,7 +63,7 @@ ggplot(ave_steps_by_interval, aes(x = interval, y = ave_steps)) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 
 ```r
@@ -96,7 +101,7 @@ ggplot(total_steps_per_day_no_na, aes(x = total_steps)) +
     labs(title = "Distribution of Daily Steps (missing values replaced)", x = "Steps", y = "Count")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
 
 
 ```r
@@ -130,4 +135,4 @@ ggplot(ave_steps_by_interval_no_na, aes(interval, ave_steps)) +
     labs(title = "Average Daily Activity", x = "Interval", y = "Average Steps")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
